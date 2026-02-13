@@ -86,8 +86,8 @@ const About = () => {
         {/* Hero Banner */}
         <div className="relative h-80 md:h-[28rem] overflow-hidden">
           <img src={heroImage} alt="Ramaul Village panorama" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 flex items-end">
-            <div className="container-village pb-10">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 flex items-end justify-center text-center">
+            <div className="container-village pb-10 flex flex-col items-center">
               <div className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-2 text-accent mb-4 backdrop-blur-md border border-accent/25">
                 <MapPin className="h-4 w-4" />
                 <span className="text-sm font-medium">Madhesh Province, Nepal</span>
@@ -95,7 +95,7 @@ const About = () => {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-primary-foreground mb-2">
                 {aboutContent?.title || t('about.title')}
               </h1>
-              <p className="text-lg text-primary-foreground/70 max-w-xl">
+              <p className="text-lg text-primary-foreground/70 max-w-xl text-center">
                 {aboutContent?.subtitle || 'Discover the heritage, community, and spirit of Ramaul Village'}
               </p>
             </div>
@@ -138,7 +138,7 @@ const About = () => {
             </div>
 
             {/* Highlights Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {/* <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {highlights.map((item) => (
                 <Card key={item.title} className="about-item border-border/50 hover:shadow-lg transition-all duration-300 group">
                   <CardContent className="p-6">
@@ -154,7 +154,7 @@ const About = () => {
                   </CardContent>
                 </Card>
               ))}
-            </div>
+            </div> */}
 
             {/* Daily Life & Economy */}
             <div className="about-item max-w-3xl mx-auto mb-12">
