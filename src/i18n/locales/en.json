@@ -1,0 +1,171 @@
+{
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "events": "Events",
+    "budget": "Budget",
+    "gallery": "Gallery",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Admin",
+    "donate": "Donate",
+    "issues": "Issues",
+    "discussions": "Discussions",
+    "emergency": "Emergency"
+  },
+  "hero": {
+    "title": "Welcome to Ramaul Village Portal",
+    "subtitle": "Siraha Municipality, Ward No. 04 — Connecting Community Through Transparency",
+    "explore": "Explore Village",
+    "report": "Report Issue"
+  },
+  "stats": {
+    "population": "Population",
+    "households": "Households",
+    "literacy": "Est. Literacy Rate",
+    "budget": "Total Budget"
+  },
+  "news": {
+    "title": "Latest News",
+    "subtitle": "Stay updated with village activities and developments",
+    "readMore": "Read More",
+    "noNews": "No news articles yet.",
+    "category": "Category",
+    "publishedOn": "Published on"
+  },
+  "events": {
+    "title": "Upcoming Events",
+    "subtitle": "Join community events and activities",
+    "location": "Location",
+    "date": "Date",
+    "noEvents": "No upcoming events.",
+    "register": "Register"
+  },
+  "budget": {
+    "title": "Budget & Finance",
+    "subtitle": "Transparent financial tracking for our community",
+    "allocated": "Allocated",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "overview": "Budget Overview",
+    "transactions": "Transactions",
+    "categories": "Categories"
+  },
+  "gallery": {
+    "title": "Photo Gallery",
+    "subtitle": "Moments captured from our village",
+    "upload": "Upload Photo",
+    "noPhotos": "No photos yet."
+  },
+  "issues": {
+    "title": "Community Issues",
+    "subtitle": "Report and track issues in our community",
+    "report": "Report Issue",
+    "status": "Status",
+    "priority": "Priority",
+    "open": "Open",
+    "inProgress": "In Progress",
+    "resolved": "Resolved",
+    "closed": "Closed"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with your village office",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message",
+    "success": "Message sent successfully!"
+  },
+  "about": {
+    "title": "About Ramaul",
+    "subtitle": "Learn about our village and its governance"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginSuccess": "Logged in successfully!",
+    "signupSuccess": "Account created! Please check your email to verify.",
+    "logoutSuccess": "Logged out successfully!",
+    "loginError": "Login failed. Please check your credentials.",
+    "signupError": "Signup failed. Please try again."
+  },
+  "donate": {
+    "title": "Make a Donation",
+    "subtitle": "Support our village development through active campaigns",
+    "amount": "Amount (NPR)",
+    "purpose": "Purpose",
+    "donorName": "Your Name",
+    "anonymous": "Donate Anonymously",
+    "scanQR": "Scan QR to Pay",
+    "submit": "Submit Donation",
+    "history": "Donation History",
+    "noCampaigns": "No Active Campaigns",
+    "noCampaignsDesc": "There are currently no donation campaigns. Please check back later.",
+    "selectCampaign": "Select a Campaign",
+    "goal": "Goal",
+    "raised": "raised",
+    "endsOn": "Ends on",
+    "showQR": "Proceed to Payment",
+    "payAmount": "Amount to Pay",
+    "noQR": "QR code not available",
+    "recipient": "Recipient",
+    "account": "Account",
+    "confirmPayment": "I've Completed Payment",
+    "thankYou": "Thank You!",
+    "thankYouDesc": "Your donation has been recorded. The admin will verify your payment.",
+    "donateAgain": "Donate Again",
+    "submitted": "Donation recorded! Admin will verify your payment.",
+    "noDonations": "No donations yet.",
+    "campaign": "Campaign"
+  },
+  "ward": {
+    "title": "Ward Representatives",
+    "subtitle": "Meet your elected representatives",
+    "position": "Position",
+    "contact": "Contact"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "viewAll": "View All",
+    "back": "Back",
+    "submit": "Submit",
+    "language": "Language",
+    "english": "English",
+    "nepali": "नेपाली",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  },
+  "footer": {
+    "tagline": "Connecting community through transparency and digital governance.",
+    "quickLinks": "Quick Links",
+    "resources": "Resources",
+    "connect": "Connect With Us",
+    "copyright": "© 2024 Ramaul Village Portal. All rights reserved.",
+    "madeWith": "Made with ❤️ for Ramaul Village",
+    "election2082": "Election 2082 Candidates"
+  }
+}
