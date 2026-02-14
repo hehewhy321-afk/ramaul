@@ -13,6 +13,8 @@ A complete breakdown of every feature in the portal, organized by category.
 - [📄 Documents](#-documents)
 - [🖼️ Gallery](#-gallery)
 - [💰 Budget Transparency](#-budget-transparency)
+- [🛠️ Local Business Directory](#-local-business-directory)
+- [📜 Digital Citizen Charter](#-digital-citizen-charter)
 - [🎁 Donations](#-donations)
 - [🏛️ Ward Representatives](#-ward-representatives)
 - [🗳️ Elections 2082](#-elections-2082)
@@ -40,8 +42,10 @@ The landing page provides a comprehensive overview of village life and quick acc
 - **Announcement Banner** — Scrolling marquee displaying active announcements with priority-based styling (normal, high, urgent). Auto-hides expired announcements.
 - **Statistics Section** — Animated counters showing key village metrics (population, households, area, wards) pulled from admin-configurable settings.
 - **News & Events Preview** — Latest 3 news articles and upcoming events in a card grid with "View All" navigation.
-- **Budget Overview** — Visual pie chart summarizing current fiscal year allocations with spending percentages.
-- **Notices Preview** — Recent official notices with date badges and category tags.
+- [💰 Budget Overview](#-budget-overview) — Visual pie chart summarizing current fiscal year allocations with spending percentages.
+- **🛠️ Business Directory Preview** — Featured local businesses and skills to encourage community support.
+- **📜 Citizen Charter Preview** — Quick access to the most common administrative procedures.
+- [📢 Notices Preview](#-notices-preview) — Recent official notices with date badges and category tags.
 - **Documents Preview** — Quick access to the latest public documents with download counts.
 - **Ward Section** — Representative profiles with photos, positions, and contact details.
 - **CTA Section** — Call-to-action encouraging community participation with links to key pages.
@@ -120,6 +124,30 @@ Full transparency into village financial planning and spending.
 - **Financial Year Filter** — View budgets for different fiscal years.
 - **Transaction History** — Individual transaction records with dates, amounts, and descriptions.
 - **Bilingual Categories** — Budget category names in both English and Nepali.
+
+---
+
+## 🛠️ Local Business Directory
+
+A digital "Yellow Pages" to promote local skills and businesses within Ramaul.
+
+- **Business Cards** — Display business name, contact person, phone number, and location.
+- **Verification Badge** — "Verified" badge for established and trusted village entities.
+- **Category Filtering** — Filter by service type (Electrician, Plumber, Tailor, Farmer, etc.).
+- **Search** — Search for specific businesses or service providers by name.
+- **Admin Management** — Add, edit, verify, and deactivate business listings.
+
+---
+
+## 📜 Digital Citizen Charter
+
+A comprehensive guide to village administrative processes and services.
+
+- **Service Catalog** — Directory of common services (Birth/Death certificates, Citizenship, etc.).
+- **Process Steps** — Step-by-step instructions on how to complete each administrative task.
+- **Required Documents** — Clear list of documents needed for each application.
+- **Processing Time & Fees** — Transparent information on expected costs and timelines.
+- **Official Links** — Direct links to external government forms and resources.
 
 ---
 
@@ -272,6 +300,8 @@ A comprehensive content management system for village administrators.
 - **Collapsible Sidebar** — Navigation between admin sections with icons and labels.
 - **News Management** — Create, edit, publish/unpublish, and delete news articles with image uploads.
 - **Events Management** — Full CRUD for events with registration viewer.
+- **Business Directory** — Manage local business listings and verification status.
+- **Citizen Charter** — Configure administrative service guides and requirements.
 - **Ward Representatives** — Manage representative profiles with photo uploads.
 - **Inquiry Management** — View contact form submissions, add admin notes, track status.
 - **Analytics Dashboard** — Visual charts showing content statistics via Recharts.
