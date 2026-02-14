@@ -203,7 +203,7 @@ A civic issue tracking system for reporting and resolving local problems.
 - **Comments** — Threaded comments on each issue for community discussion.
 - **Image Uploads** — Photo evidence uploaded to Supabase Storage.
 - **Admin Assignment** — Admins can assign issues and update status.
-
+  Note:-some features are pending,working on that.
 ---
 
 ## 📞 Contact & Inquiries
