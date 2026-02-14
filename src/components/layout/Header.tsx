@@ -36,6 +36,8 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
         { name: t('nav.gallery'), path: '/gallery' },
         { name: t('nav.budget'), path: '/budget' },
         { name: 'Documents', path: '/documents' },
+        { name: 'Business Directory', path: '/business-directory' },
+        { name: 'Citizen Charter', path: '/citizen-charter' },
         { name: t('nav.about'), path: '/about' },
         { name: t('nav.faq'), path: '/faq' },
       ],
@@ -93,9 +95,9 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isTransparent ? 'bg-transparent' : 'glass shadow-sm'}`}>
       <div className="container-village flex items-center justify-between h-16 md:h-20">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logoImg} alt="Ramaul Logo" className="w-30 h-20 rounded-full object-cover" />
+          <img src={logoImg} alt="Ramaul Logo" className="w-10 h-10 rounded-full object-cover" />
           <div>
-            {/* <span className={`font-heading font-bold text-lg leading-tight ${isTransparent ? 'text-primary-foreground' : 'text-foreground'}`}>Ramaul</span> */}
+            <span className={`font-heading font-bold text-lg leading-tight ${isTransparent ? 'text-primary-foreground' : 'text-foreground'}`}>Ramaul</span>
 
           </div>
         </Link>
@@ -108,12 +110,12 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                 key={item.path}
                 to={item.path}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${item.path === '/donate'
-                  ? 'text-accent hover:text-accent/80'
-                  : isActive(item.path)
-                    ? 'bg-primary/10 text-primary'
-                    : isTransparent
-                      ? 'text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10'
-                      : 'text-foreground/70 hover:text-foreground hover:bg-muted'
+                    ? 'text-accent hover:text-accent/80'
+                    : isActive(item.path)
+                      ? 'bg-primary/10 text-primary'
+                      : isTransparent
+                        ? 'text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10'
+                        : 'text-foreground/70 hover:text-foreground hover:bg-muted'
                   }`}
               >
                 {item.path === '/donate' && <Heart className="h-3.5 w-3.5" />}
@@ -128,10 +130,10 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
               >
                 <button
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${isActive(undefined, item.children)
-                    ? 'bg-primary/10 text-primary'
-                    : isTransparent
-                      ? 'text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10'
-                      : 'text-foreground/70 hover:text-foreground hover:bg-muted'
+                      ? 'bg-primary/10 text-primary'
+                      : isTransparent
+                        ? 'text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10'
+                        : 'text-foreground/70 hover:text-foreground hover:bg-muted'
                     }`}
                 >
                   {item.name}
@@ -144,8 +146,8 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                         key={child.path}
                         to={child.path}
                         className={`block px-4 py-2.5 text-sm transition-colors ${location.pathname === child.path
-                          ? 'bg-primary/10 text-primary font-medium'
-                          : 'text-popover-foreground hover:bg-muted'
+                            ? 'bg-primary/10 text-primary font-medium'
+                            : 'text-popover-foreground hover:bg-muted'
                           }`}
                       >
                         {child.name}
@@ -188,10 +190,10 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                     to={item.path}
                     onClick={() => setOpen(false)}
                     className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${item.path === '/donate'
-                      ? 'text-accent'
-                      : location.pathname === item.path
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-foreground/70 hover:text-foreground hover:bg-muted'
+                        ? 'text-accent'
+                        : location.pathname === item.path
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-foreground/70 hover:text-foreground hover:bg-muted'
                       }`}
                   >
                     {item.path === '/donate' && <Heart className="h-4 w-4" />}
@@ -202,8 +204,8 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                     <button
                       onClick={() => setMobileExpanded(mobileExpanded === item.name ? null : item.name)}
                       className={`w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${isActive(undefined, item.children)
-                        ? 'text-primary'
-                        : 'text-foreground/70 hover:text-foreground hover:bg-muted'
+                          ? 'text-primary'
+                          : 'text-foreground/70 hover:text-foreground hover:bg-muted'
                         }`}
                     >
                       {item.name}
@@ -217,8 +219,8 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                             to={child.path}
                             onClick={() => setOpen(false)}
                             className={`block px-3 py-2.5 rounded-lg text-sm transition-colors ${location.pathname === child.path
-                              ? 'bg-primary/10 text-primary font-medium'
-                              : 'text-foreground/70 hover:text-foreground hover:bg-muted'
+                                ? 'bg-primary/10 text-primary font-medium'
+                                : 'text-foreground/70 hover:text-foreground hover:bg-muted'
                               }`}
                           >
                             {child.name}

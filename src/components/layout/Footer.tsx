@@ -9,7 +9,8 @@ const Footer = () => {
   return (
     <footer className="bg-[hsl(222,20%,12%)] text-white dark:bg-[hsl(222,30%,6%)]">
       <div className="container-village section-padding pb-8">
-        <div className="grid md:grid-cols-4 gap-10 mb-10">
+        <div className="grid md:grid-cols-5 gap-10 mb-10">
+          {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img src={logoImg} alt="Ramaul Logo" className="w-10 h-10 rounded-full object-cover" />
@@ -20,6 +21,8 @@ const Footer = () => {
             </div>
             <p className="text-sm text-white/60 leading-relaxed">{t('footer.tagline')}</p>
           </div>
+
+          {/* Quick Links */}
           <div>
             <h4 className="font-heading font-semibold mb-4">{t('footer.quickLinks')}</h4>
             <div className="space-y-2">
@@ -34,15 +37,31 @@ const Footer = () => {
               ))}
             </div>
           </div>
+
+          {/* Services */}
           <div>
-            <h4 className="font-heading font-semibold mb-4">{t('footer.resources')}</h4>
+            <h4 className="font-heading font-semibold mb-4">Services</h4>
             <div className="space-y-2">
               {[
-                { name: t('issues.title'), path: '/issues' },
-                { name: t('donate.title'), path: '/donate' },
+                { name: 'Business Directory', path: '/business-directory' },
+                { name: 'Citizen Charter', path: '/citizen-charter' },
                 { name: 'Documents', path: '/documents' },
                 { name: 'Notices', path: '/notices' },
                 { name: t('footer.election2082'), path: '/elections' },
+              ].map(item => (
+                <Link key={item.path} to={item.path} className="block text-sm text-white/60 hover:text-accent transition-colors">{item.name}</Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Community */}
+          <div>
+            <h4 className="font-heading font-semibold mb-4">Community</h4>
+            <div className="space-y-2">
+              {[
+                { name: t('issues.title'), path: '/issues' },
+                { name: t('nav.discussions'), path: '/discussions' },
+                { name: t('donate.title'), path: '/donate' },
                 { name: t('nav.faq'), path: '/faq' },
                 { name: t('nav.contact'), path: '/contact' },
                 { name: t('nav.emergency'), path: '/emergency' },
@@ -52,6 +71,8 @@ const Footer = () => {
               ))}
             </div>
           </div>
+
+          {/* Connect */}
           <div>
             <h4 className="font-heading font-semibold mb-4">{t('footer.connect')}</h4>
             <div className="space-y-3 text-sm text-white/60">

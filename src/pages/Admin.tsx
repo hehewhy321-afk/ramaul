@@ -21,6 +21,7 @@ import {
   ImageIcon, FileText, LifeBuoy, Heart, UserCog, LogOut, Plus, Trash2, Pencil, ArrowLeft, Upload,
   MessageSquare, Lock, ChevronLeft, ChevronRight, Target, Settings2,
   TrendingUp, BarChart3, Bold, Italic, List, Heading, Eye, Phone, X,
+  Store, BookOpen,
 } from 'lucide-react';
 import LanguageToggle from '@/components/LanguageToggle';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -28,7 +29,7 @@ import { useAdminBadges } from '@/hooks/useAdminBadges';
 import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend } from 'recharts';
 
-type Section = 'dashboard' | 'news' | 'events' | 'announcements' | 'budget' | 'ward' | 'gallery' | 'issues' | 'support' | 'donations' | 'campaigns' | 'users' | 'discussions' | 'content' | 'documents' | 'notices';
+type Section = 'dashboard' | 'news' | 'events' | 'announcements' | 'budget' | 'ward' | 'gallery' | 'issues' | 'support' | 'donations' | 'campaigns' | 'users' | 'discussions' | 'content' | 'documents' | 'notices' | 'businesses' | 'charter';
 
 const Admin = () => {
   const { user, isAdmin, signOut, loading: authLoading } = useAuth();
@@ -57,6 +58,8 @@ const Admin = () => {
     { key: 'users', icon: UserCog, label: t('nav.home') === 'Home' ? 'Users' : 'प्रयोगकर्ता' },
     { key: 'documents', icon: FileText, label: 'Documents' },
     { key: 'notices', icon: Megaphone, label: 'Notices' },
+    { key: 'businesses', icon: Store, label: 'Businesses' },
+    { key: 'charter', icon: BookOpen, label: 'Citizen Charter' },
     { key: 'content', icon: Settings2, label: t('nav.home') === 'Home' ? 'Manage Content' : 'सामग्री व्यवस्थापन' },
   ];
 
@@ -148,6 +151,8 @@ const Admin = () => {
         {section === 'documents' && <DocumentsAdminSection />}
         {section === 'notices' && <NoticesAdminSection />}
         {section === 'content' && <ManageContentSection />}
+        {section === 'businesses' && <BusinessesAdminSection />}
+        {section === 'charter' && <CharterAdminSection />}
       </main>
     </div>
   );
@@ -2346,6 +2351,232 @@ const NoticesAdminSection = () => {
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon" onClick={() => openEdit(n)}><Pencil className="h-4 w-4" /></Button>
                   <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(n.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
+    </div>
+  );
+};
+
+/* ===================== BUSINESSES ADMIN ===================== */
+const BusinessesAdminSection = () => {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [form, setForm] = useState({ business_name: '', business_name_ne: '', category: 'general', contact_person: '', contact_person_ne: '', phone: '', email: '', location: '', location_ne: '', description: '', description_ne: '', is_verified: false, is_active: true });
+
+  const { data: items = [] } = useQuery({
+    queryKey: ['admin-businesses'],
+    queryFn: async () => {
+      const { data } = await supabase.from('local_businesses').select('*').order('created_at', { ascending: false });
+      return data || [];
+    },
+  });
+
+  const resetForm = () => { setForm({ business_name: '', business_name_ne: '', category: 'general', contact_person: '', contact_person_ne: '', phone: '', email: '', location: '', location_ne: '', description: '', description_ne: '', is_verified: false, is_active: true }); setEditId(null); };
+
+  const openEdit = (item: any) => {
+    setForm({ business_name: item.business_name || '', business_name_ne: item.business_name_ne || '', category: item.category || 'general', contact_person: item.contact_person || '', contact_person_ne: item.contact_person_ne || '', phone: item.phone || '', email: item.email || '', location: item.location || '', location_ne: item.location_ne || '', description: item.description || '', description_ne: item.description_ne || '', is_verified: item.is_verified || false, is_active: item.is_active !== false });
+    setEditId(item.id);
+    setOpen(true);
+  };
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      if (editId) {
+        const { error } = await supabase.from('local_businesses').update(form).eq('id', editId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('local_businesses').insert(form);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-businesses'] }); toast.success('Business saved!'); setOpen(false); resetForm(); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('local_businesses').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-businesses'] }); toast.success('Deleted!'); },
+  });
+
+  const categories = ['electrician', 'plumber', 'tailor', 'farmer', 'grocery', 'pharmacy', 'mechanic', 'teacher', 'carpenter', 'other'];
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold font-heading">Business Directory</h1>
+        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
+          <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" /> Add Business</Button></DialogTrigger>
+          <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>{editId ? 'Edit' : 'Add'} Business</DialogTitle></DialogHeader>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Business Name *</Label><Input value={form.business_name} onChange={e => setForm(p => ({ ...p, business_name: e.target.value }))} /></div>
+                <div><Label>Name (नेपाली)</Label><Input value={form.business_name_ne} onChange={e => setForm(p => ({ ...p, business_name_ne: e.target.value }))} /></div>
+              </div>
+              <div><Label>Category</Label>
+                <Select value={form.category} onValueChange={v => setForm(p => ({ ...p, category: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{categories.map(c => <SelectItem key={c} value={c} className="capitalize">{c}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Contact Person</Label><Input value={form.contact_person} onChange={e => setForm(p => ({ ...p, contact_person: e.target.value }))} /></div>
+                <div><Label>Contact (नेपाली)</Label><Input value={form.contact_person_ne} onChange={e => setForm(p => ({ ...p, contact_person_ne: e.target.value }))} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} /></div>
+                <div><Label>Email</Label><Input value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Location</Label><Input value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} /></div>
+                <div><Label>Location (नेपाली)</Label><Input value={form.location_ne} onChange={e => setForm(p => ({ ...p, location_ne: e.target.value }))} /></div>
+              </div>
+              <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={2} /></div>
+              <div><Label>Description (नेपाली)</Label><Textarea value={form.description_ne} onChange={e => setForm(p => ({ ...p, description_ne: e.target.value }))} rows={2} /></div>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2"><Switch checked={form.is_verified} onCheckedChange={v => setForm(p => ({ ...p, is_verified: v }))} /><Label>Verified</Label></div>
+                <div className="flex items-center gap-2"><Switch checked={form.is_active} onCheckedChange={v => setForm(p => ({ ...p, is_active: v }))} /><Label>Active</Label></div>
+              </div>
+              <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending || !form.business_name} className="w-full">{saveMutation.isPending ? 'Saving...' : 'Save'}</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <Card className="border-border/50 overflow-x-auto">
+        <Table>
+          <TableHeader><TableRow><TableHead>Business</TableHead><TableHead>Category</TableHead><TableHead>Contact</TableHead><TableHead>Phone</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+          <TableBody>
+            {items.map((b: any) => (
+              <TableRow key={b.id}>
+                <TableCell className="font-medium">{b.business_name}</TableCell>
+                <TableCell><Badge variant="outline" className="capitalize">{b.category}</Badge></TableCell>
+                <TableCell className="text-sm">{b.contact_person}</TableCell>
+                <TableCell className="text-sm">{b.phone}</TableCell>
+                <TableCell>
+                  <div className="flex gap-1">
+                    {b.is_verified && <Badge className="bg-primary/10 text-primary border-0 text-xs">Verified</Badge>}
+                    <Badge variant={b.is_active ? 'default' : 'secondary'}>{b.is_active ? 'Active' : 'Inactive'}</Badge>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="icon" onClick={() => openEdit(b)}><Pencil className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(b.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
+    </div>
+  );
+};
+
+/* ===================== CITIZEN CHARTER ADMIN ===================== */
+const CharterAdminSection = () => {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [form, setForm] = useState({ service_name: '', service_name_ne: '', category: 'certificate', description: '', description_ne: '', required_documents: '', required_documents_ne: '', process_steps: '', process_steps_ne: '', processing_time: '', processing_time_ne: '', fee: '', fee_ne: '', official_link: '', is_active: true, sort_order: 0 });
+
+  const { data: items = [] } = useQuery({
+    queryKey: ['admin-charter'],
+    queryFn: async () => {
+      const { data } = await supabase.from('citizen_charter').select('*').order('sort_order').order('service_name');
+      return data || [];
+    },
+  });
+
+  const resetForm = () => { setForm({ service_name: '', service_name_ne: '', category: 'certificate', description: '', description_ne: '', required_documents: '', required_documents_ne: '', process_steps: '', process_steps_ne: '', processing_time: '', processing_time_ne: '', fee: '', fee_ne: '', official_link: '', is_active: true, sort_order: 0 }); setEditId(null); };
+
+  const openEdit = (item: any) => {
+    setForm({ service_name: item.service_name || '', service_name_ne: item.service_name_ne || '', category: item.category || 'certificate', description: item.description || '', description_ne: item.description_ne || '', required_documents: item.required_documents || '', required_documents_ne: item.required_documents_ne || '', process_steps: item.process_steps || '', process_steps_ne: item.process_steps_ne || '', processing_time: item.processing_time || '', processing_time_ne: item.processing_time_ne || '', fee: item.fee || '', fee_ne: item.fee_ne || '', official_link: item.official_link || '', is_active: item.is_active !== false, sort_order: item.sort_order || 0 });
+    setEditId(item.id);
+    setOpen(true);
+  };
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      if (editId) {
+        const { error } = await supabase.from('citizen_charter').update(form).eq('id', editId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('citizen_charter').insert(form);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-charter'] }); toast.success('Service saved!'); setOpen(false); resetForm(); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('citizen_charter').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-charter'] }); toast.success('Deleted!'); },
+  });
+
+  const categories = ['certificate', 'registration', 'recommendation', 'permit', 'other'];
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold font-heading">Citizen Charter</h1>
+        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
+          <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" /> Add Service</Button></DialogTrigger>
+          <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>{editId ? 'Edit' : 'Add'} Service</DialogTitle></DialogHeader>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Service Name *</Label><Input value={form.service_name} onChange={e => setForm(p => ({ ...p, service_name: e.target.value }))} /></div>
+                <div><Label>Name (नेपाली)</Label><Input value={form.service_name_ne} onChange={e => setForm(p => ({ ...p, service_name_ne: e.target.value }))} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Category</Label>
+                  <Select value={form.category} onValueChange={v => setForm(p => ({ ...p, category: v }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>{categories.map(c => <SelectItem key={c} value={c} className="capitalize">{c}</SelectItem>)}</SelectContent>
+                  </Select>
+                </div>
+                <div><Label>Sort Order</Label><Input type="number" value={form.sort_order} onChange={e => setForm(p => ({ ...p, sort_order: Number(e.target.value) }))} /></div>
+              </div>
+              <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={2} /></div>
+              <div><Label>Description (नेपाली)</Label><Textarea value={form.description_ne} onChange={e => setForm(p => ({ ...p, description_ne: e.target.value }))} rows={2} /></div>
+              <div><Label>Required Documents</Label><Textarea value={form.required_documents} onChange={e => setForm(p => ({ ...p, required_documents: e.target.value }))} rows={3} placeholder="List each document on a new line" /></div>
+              <div><Label>Required Documents (नेपाली)</Label><Textarea value={form.required_documents_ne} onChange={e => setForm(p => ({ ...p, required_documents_ne: e.target.value }))} rows={3} /></div>
+              <div><Label>Process Steps</Label><Textarea value={form.process_steps} onChange={e => setForm(p => ({ ...p, process_steps: e.target.value }))} rows={3} placeholder="Step-by-step process" /></div>
+              <div><Label>Process Steps (नेपाली)</Label><Textarea value={form.process_steps_ne} onChange={e => setForm(p => ({ ...p, process_steps_ne: e.target.value }))} rows={3} /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Processing Time</Label><Input value={form.processing_time} onChange={e => setForm(p => ({ ...p, processing_time: e.target.value }))} placeholder="e.g. 3-5 days" /></div>
+                <div><Label>Time (नेपाली)</Label><Input value={form.processing_time_ne} onChange={e => setForm(p => ({ ...p, processing_time_ne: e.target.value }))} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Fee</Label><Input value={form.fee} onChange={e => setForm(p => ({ ...p, fee: e.target.value }))} placeholder="e.g. NPR 100" /></div>
+                <div><Label>Fee (नेपाली)</Label><Input value={form.fee_ne} onChange={e => setForm(p => ({ ...p, fee_ne: e.target.value }))} /></div>
+              </div>
+              <div><Label>Official Link</Label><Input value={form.official_link} onChange={e => setForm(p => ({ ...p, official_link: e.target.value }))} placeholder="https://..." /></div>
+              <div className="flex items-center gap-2"><Switch checked={form.is_active} onCheckedChange={v => setForm(p => ({ ...p, is_active: v }))} /><Label>Active</Label></div>
+              <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending || !form.service_name} className="w-full">{saveMutation.isPending ? 'Saving...' : 'Save'}</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <Card className="border-border/50 overflow-x-auto">
+        <Table>
+          <TableHeader><TableRow><TableHead>Service</TableHead><TableHead>Category</TableHead><TableHead>Fee</TableHead><TableHead>Time</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+          <TableBody>
+            {items.map((item: any) => (
+              <TableRow key={item.id}>
+                <TableCell className="font-medium">{item.service_name}</TableCell>
+                <TableCell><Badge variant="outline" className="capitalize">{item.category}</Badge></TableCell>
+                <TableCell className="text-sm">{item.fee || '—'}</TableCell>
+                <TableCell className="text-sm">{item.processing_time || '—'}</TableCell>
+                <TableCell><Badge variant={item.is_active ? 'default' : 'secondary'}>{item.is_active ? 'Active' : 'Inactive'}</Badge></TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="icon" onClick={() => openEdit(item)}><Pencil className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                 </TableCell>
               </TableRow>
             ))}

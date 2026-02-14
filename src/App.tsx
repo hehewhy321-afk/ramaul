@@ -24,6 +24,8 @@ import Elections from "./pages/Elections";
 import NotFound from "./pages/NotFound";
 import Stats from "./pages/Stats";
 import Emergency from "./pages/Emergency";
+import BusinessDirectory from "./pages/BusinessDirectory";
+import CitizenCharter from "./pages/CitizenCharter";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +56,8 @@ const App = () => (
               <Route path="/elections" element={<Elections />} />
               <Route path="/stats" element={<Stats />} />
               <Route path="/emergency" element={<Emergency />} />
+              <Route path="/business-directory" element={<BusinessDirectory />} />
+              <Route path="/citizen-charter" element={<CitizenCharter />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
