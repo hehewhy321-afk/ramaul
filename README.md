@@ -8,14 +8,16 @@ The **Ramaul Village Portal** serves as a digital platform connecting village ad
 
 ## ✨ Core Features
 
-- **💰 Budget Transparency**: Visual breakdown of village financial planning and spending with interactive charts.
-- **🗳️ Election Dashboard**:  candidate details of 2081 election, and vote share visualizations for local elections.
-- **🏛️ Ward Administration**: Profiles of elected leaders, official notices, and document repository for public records.
-- **💬 Community Engagement**: Threaded discussion forums and a civic issue tracking system for reporting local problems.
-- **📅 Events & News**: Stay updated with upcoming village events (with registration) and the latest local news.
-- **🚨 Emergency Services**: Quick access to critical emergency contacts and services.
-- **🛡️ Admin Dashboard**: Full-featured CMS for administrators to manage content, inquiries, and analytics.
-- **🌍 Bilingual Support**: Seamlessly switch between **English** and **नेपाली** (Nepali).
+-  **Budget Transparency** : Visual breakdown of village financial planning and spending with interactive charts.
+- **Business Directory**: A digital directory for village shops and services to support the local economy.
+- **Citizen Charter**: Comprehensive "How-To" guide for administrative tasks and public services.
+- **Election Dashboard**:  candidate details of 2081 election, and vote share visualizations for local elections.
+- **Ward Administration**: Profiles of elected leaders, official notices, and document repository for public records.
+- **Community Engagement**: Threaded discussion forums and a civic issue tracking system for reporting local problems.
+- **Events & News**: Stay updated with upcoming village events (with registration) and the latest local news.
+- **Emergency Services**: Quick access to critical emergency contacts and services.
+- **Admin Dashboard**: Full-featured CMS for administrators to manage content, inquiries, and analytics.
+- **Bilingual Support**: Seamlessly switch between **English** and **नेपाली** (Nepali).
 
 ## 🛠️ Tech Stack
 
