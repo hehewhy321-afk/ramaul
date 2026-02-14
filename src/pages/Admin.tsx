@@ -81,9 +81,8 @@ const Admin = () => {
               key={item.key}
               onClick={() => setSection(item.key)}
               title={sidebarCollapsed ? item.label : undefined}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                section === item.key ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-              } ${sidebarCollapsed ? 'justify-center' : ''}`}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${section === item.key ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                } ${sidebarCollapsed ? 'justify-center' : ''}`}
             >
               <item.icon className="h-4 w-4 shrink-0" />
               {!sidebarCollapsed && <span className="flex-1 text-left truncate">{item.label}</span>}
@@ -122,9 +121,8 @@ const Admin = () => {
             <button
               key={item.key}
               onClick={() => setSection(item.key)}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 text-[10px] font-medium rounded-lg min-w-[56px] relative ${
-                section === item.key ? 'text-primary bg-primary/10' : 'text-muted-foreground'
-              }`}
+              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 text-[10px] font-medium rounded-lg min-w-[56px] relative ${section === item.key ? 'text-primary bg-primary/10' : 'text-muted-foreground'
+                }`}
             >
               <item.icon className="h-4 w-4" />
               {item.label.slice(0, 6)}
@@ -745,26 +743,27 @@ const ManageContentSection = () => {
   const renderHeroForm = () => {
     const heroPreview = heroImgFile ? URL.createObjectURL(heroImgFile) : formData.image_url || null;
     return (
-    <div className="space-y-4">
-      <div><Label>Title</Label><Input value={formData.title || ''} onChange={e => updateField('title', e.target.value)} placeholder="Welcome to Ramaul" /></div>
-      <div><Label>Subtitle</Label><Textarea value={formData.subtitle || ''} onChange={e => updateField('subtitle', e.target.value)} rows={3} placeholder="A vibrant community..." /></div>
-      <div><Label>CTA Button Text</Label><Input value={formData.cta_text || ''} onChange={e => updateField('cta_text', e.target.value)} placeholder="Explore" /></div>
-      <div>
-        <Label>Hero Background Image</Label>
-        <div className="flex items-center gap-3 mt-1">
-          {heroPreview && <img src={heroPreview} alt="Preview" className="h-20 w-32 object-cover rounded border border-border" />}
-          <div className="space-y-2">
-            <input ref={heroImgRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setHeroImgFile(f); updateField('image_url', ''); } }} />
-            <Button type="button" variant="outline" size="sm" onClick={() => heroImgRef.current?.click()}>
-              <Upload className="h-4 w-4 mr-1" />{heroImgFile ? 'Change' : 'Upload'}
-            </Button>
+      <div className="space-y-4">
+        <div><Label>Title</Label><Input value={formData.title || ''} onChange={e => updateField('title', e.target.value)} placeholder="Welcome to Ramaul" /></div>
+        <div><Label>Subtitle</Label><Textarea value={formData.subtitle || ''} onChange={e => updateField('subtitle', e.target.value)} rows={3} placeholder="A vibrant community..." /></div>
+        <div><Label>CTA Button Text</Label><Input value={formData.cta_text || ''} onChange={e => updateField('cta_text', e.target.value)} placeholder="Explore" /></div>
+        <div>
+          <Label>Hero Background Image</Label>
+          <div className="flex items-center gap-3 mt-1">
+            {heroPreview && <img src={heroPreview} alt="Preview" className="h-20 w-32 object-cover rounded border border-border" />}
+            <div className="space-y-2">
+              <input ref={heroImgRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setHeroImgFile(f); updateField('image_url', ''); } }} />
+              <Button type="button" variant="outline" size="sm" onClick={() => heroImgRef.current?.click()}>
+                <Upload className="h-4 w-4 mr-1" />{heroImgFile ? 'Change' : 'Upload'}
+              </Button>
+            </div>
           </div>
+          <p className="text-xs text-muted-foreground mt-1">Or paste URL:</p>
+          <Input value={heroImgFile ? '' : (formData.image_url || '')} disabled={!!heroImgFile} onChange={e => updateField('image_url', e.target.value)} placeholder="https://... (leave empty for default)" className="mt-1" />
         </div>
-        <p className="text-xs text-muted-foreground mt-1">Or paste URL:</p>
-        <Input value={heroImgFile ? '' : (formData.image_url || '')} disabled={!!heroImgFile} onChange={e => updateField('image_url', e.target.value)} placeholder="https://... (leave empty for default)" className="mt-1" />
       </div>
-    </div>
-  );};
+    );
+  };
 
   const renderStatsForm = () => (
     <div className="space-y-4">
@@ -1130,11 +1129,16 @@ const CampaignsSection = () => {
   );
 };
 
-/* ===================== BUDGET SECTION ===================== */
+/* ===================== BUDGET SECTION (ADVANCED) ===================== */
 const BudgetSection = () => {
   const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ name: '', allocated_amount: '', spent_amount: '0', financial_year: '2082/83', description: '' });
+  const { user } = useAuth();
+  const [catOpen, setCatOpen] = useState(false);
+  const [spentOpen, setSpentOpen] = useState(false);
+  const [editCatId, setEditCatId] = useState<string | null>(null);
+  const [catForm, setCatForm] = useState({ name: '', name_ne: '', allocated_amount: '', financial_year: '2082/83', description: '' });
+  const [spentForm, setSpentForm] = useState({ category_id: '', amount: '', description: '', description_ne: '', transaction_date: new Date().toISOString().split('T')[0] });
+  const [activeTab, setActiveTab] = useState<'categories' | 'transactions'>('categories');
 
   const { data: categories = [] } = useQuery({
     queryKey: ['admin-budget'],
@@ -1144,57 +1148,289 @@ const BudgetSection = () => {
     },
   });
 
-  const saveMutation = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.from('budget_categories').insert({
-        name: form.name, allocated_amount: Number(form.allocated_amount),
-        spent_amount: Number(form.spent_amount), financial_year: form.financial_year, description: form.description,
-      });
-      if (error) throw error;
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['admin-budget-transactions'],
+    queryFn: async () => {
+      const { data } = await supabase.from('budget_transactions').select('*, budget_categories(name, name_ne)').order('transaction_date', { ascending: false });
+      return data || [];
     },
-    onSuccess: () => { toast.success('Saved!'); setOpen(false); queryClient.invalidateQueries({ queryKey: ['admin-budget'] }); },
+  });
+
+  const totalAllocated = categories.reduce((s: number, c: any) => s + Number(c.allocated_amount), 0);
+  const totalSpent = categories.reduce((s: number, c: any) => s + Number(c.spent_amount), 0);
+  const totalRemaining = totalAllocated - totalSpent;
+  const spentPct = totalAllocated > 0 ? ((totalSpent / totalAllocated) * 100).toFixed(1) : '0';
+
+  const saveCatMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        name: catForm.name, name_ne: catForm.name_ne || null,
+        allocated_amount: Number(catForm.allocated_amount),
+        financial_year: catForm.financial_year, description: catForm.description || null,
+      };
+      if (editCatId) {
+        const { error } = await supabase.from('budget_categories').update(payload).eq('id', editCatId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('budget_categories').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success('Category saved!'); setCatOpen(false); setEditCatId(null);
+      setCatForm({ name: '', name_ne: '', allocated_amount: '', financial_year: '2082/83', description: '' });
+      queryClient.invalidateQueries({ queryKey: ['admin-budget'] });
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const deleteMutation = useMutation({
+  const saveSpentMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('budget_transactions').insert({
+        category_id: spentForm.category_id, amount: Number(spentForm.amount),
+        description: spentForm.description, description_ne: spentForm.description_ne || null,
+        transaction_date: spentForm.transaction_date, created_by: user?.id || null,
+      });
+      if (error) throw error;
+      // Update the spent_amount on the category
+      const cat = categories.find((c: any) => c.id === spentForm.category_id);
+      if (cat) {
+        const newSpent = Number(cat.spent_amount) + Number(spentForm.amount);
+        await supabase.from('budget_categories').update({ spent_amount: newSpent }).eq('id', spentForm.category_id);
+      }
+    },
+    onSuccess: () => {
+      toast.success('Spending recorded!'); setSpentOpen(false);
+      setSpentForm({ category_id: '', amount: '', description: '', description_ne: '', transaction_date: new Date().toISOString().split('T')[0] });
+      queryClient.invalidateQueries({ queryKey: ['admin-budget'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-budget-transactions'] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const deleteCatMutation = useMutation({
     mutationFn: async (id: string) => { await supabase.from('budget_categories').delete().eq('id', id); },
     onSuccess: () => { toast.success('Deleted!'); queryClient.invalidateQueries({ queryKey: ['admin-budget'] }); },
   });
 
+  const deleteTxMutation = useMutation({
+    mutationFn: async (tx: any) => {
+      await supabase.from('budget_transactions').delete().eq('id', tx.id);
+      // Subtract from spent_amount
+      const cat = categories.find((c: any) => c.id === tx.category_id);
+      if (cat) {
+        const newSpent = Math.max(0, Number(cat.spent_amount) - Number(tx.amount));
+        await supabase.from('budget_categories').update({ spent_amount: newSpent }).eq('id', tx.category_id);
+      }
+    },
+    onSuccess: () => {
+      toast.success('Transaction removed!');
+      queryClient.invalidateQueries({ queryKey: ['admin-budget'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-budget-transactions'] });
+    },
+  });
+
+  const openEditCat = (c: any) => {
+    setEditCatId(c.id);
+    setCatForm({ name: c.name, name_ne: c.name_ne || '', allocated_amount: String(c.allocated_amount), financial_year: c.financial_year, description: c.description || '' });
+    setCatOpen(true);
+  };
+
+  const openNewCat = () => {
+    setEditCatId(null);
+    setCatForm({ name: '', name_ne: '', allocated_amount: '', financial_year: '2082/83', description: '' });
+    setCatOpen(true);
+  };
+
+  const fmtNPR = (v: number) => `NPR ${v.toLocaleString()}`;
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">Budget</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-2" />Add Category</Button></DialogTrigger>
-          <DialogContent>
-            <DialogHeader><DialogTitle>Add Budget Category</DialogTitle></DialogHeader>
-            <div className="space-y-4">
-              <div><Label>Name</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} /></div>
-              <div><Label>Allocated Amount</Label><Input type="number" value={form.allocated_amount} onChange={e => setForm(p => ({ ...p, allocated_amount: e.target.value }))} /></div>
-              <div><Label>Spent Amount</Label><Input type="number" value={form.spent_amount} onChange={e => setForm(p => ({ ...p, spent_amount: e.target.value }))} /></div>
-              <div><Label>Financial Year</Label><Input value={form.financial_year} onChange={e => setForm(p => ({ ...p, financial_year: e.target.value }))} /></div>
-              <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="w-full">Save</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <div>
+          <h1 className="text-2xl font-bold font-heading">Budget Management</h1>
+          <p className="text-sm text-muted-foreground">Manage categories, allocations & spending</p>
+        </div>
+        <div className="flex gap-2">
+          <Dialog open={catOpen} onOpenChange={setCatOpen}>
+            <DialogTrigger asChild><Button onClick={openNewCat}><Plus className="h-4 w-4 mr-2" />Add Category</Button></DialogTrigger>
+            <DialogContent>
+              <DialogHeader><DialogTitle>{editCatId ? 'Edit' : 'Add'} Budget Category</DialogTitle></DialogHeader>
+              <div className="space-y-4">
+                <div><Label>Category Name *</Label><Input value={catForm.name} onChange={e => setCatForm(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Education, Infrastructure" /></div>
+                <div><Label>Category Name (Nepali)</Label><Input value={catForm.name_ne} onChange={e => setCatForm(p => ({ ...p, name_ne: e.target.value }))} /></div>
+                <div><Label>Allocated Amount (NPR) *</Label><Input type="number" value={catForm.allocated_amount} onChange={e => setCatForm(p => ({ ...p, allocated_amount: e.target.value }))} placeholder="e.g. 5000000" /></div>
+                <div><Label>Financial Year</Label><Input value={catForm.financial_year} onChange={e => setCatForm(p => ({ ...p, financial_year: e.target.value }))} /></div>
+                <div><Label>Description</Label><Textarea value={catForm.description} onChange={e => setCatForm(p => ({ ...p, description: e.target.value }))} rows={2} /></div>
+                <Button onClick={() => saveCatMutation.mutate()} disabled={saveCatMutation.isPending || !catForm.name || !catForm.allocated_amount} className="w-full">
+                  {saveCatMutation.isPending ? 'Saving...' : (editCatId ? 'Update Category' : 'Add Category')}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={spentOpen} onOpenChange={setSpentOpen}>
+            <DialogTrigger asChild><Button variant="secondary"><Wallet className="h-4 w-4 mr-2" />Record Spending</Button></DialogTrigger>
+            <DialogContent>
+              <DialogHeader><DialogTitle>Record Spending</DialogTitle></DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Category *</Label>
+                  <Select value={spentForm.category_id} onValueChange={v => setSpentForm(p => ({ ...p, category_id: v }))}>
+                    <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
+                    <SelectContent>
+                      {categories.map((c: any) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name} (Remaining: {fmtNPR(Number(c.allocated_amount) - Number(c.spent_amount))})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div><Label>Amount (NPR) *</Label><Input type="number" value={spentForm.amount} onChange={e => setSpentForm(p => ({ ...p, amount: e.target.value }))} placeholder="Amount spent" /></div>
+                <div><Label>Description *</Label><Input value={spentForm.description} onChange={e => setSpentForm(p => ({ ...p, description: e.target.value }))} placeholder="What was this spending for?" /></div>
+                <div><Label>Description (Nepali)</Label><Input value={spentForm.description_ne} onChange={e => setSpentForm(p => ({ ...p, description_ne: e.target.value }))} /></div>
+                <div><Label>Date</Label><Input type="date" value={spentForm.transaction_date} onChange={e => setSpentForm(p => ({ ...p, transaction_date: e.target.value }))} /></div>
+                {spentForm.category_id && spentForm.amount && (() => {
+                  const cat = categories.find((c: any) => c.id === spentForm.category_id);
+                  if (!cat) return null;
+                  const remaining = Number(cat.allocated_amount) - Number(cat.spent_amount);
+                  const overBudget = Number(spentForm.amount) > remaining;
+                  return (
+                    <div className={`p-3 rounded-lg text-sm ${overBudget ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
+                      {overBudget ? '⚠️ Warning: This exceeds the remaining budget!' : `✓ Remaining after this: ${fmtNPR(remaining - Number(spentForm.amount))}`}
+                    </div>
+                  );
+                })()}
+                <Button onClick={() => saveSpentMutation.mutate()} disabled={saveSpentMutation.isPending || !spentForm.category_id || !spentForm.amount || !spentForm.description} className="w-full">
+                  {saveSpentMutation.isPending ? 'Saving...' : 'Record Spending'}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-      <Card className="border-border/50 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow><TableHead>Category</TableHead><TableHead>Allocated</TableHead><TableHead>Spent</TableHead><TableHead>Year</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-          <TableBody>
-            {categories.map((c: any) => (
-              <TableRow key={c.id}>
-                <TableCell className="font-medium">{c.name}</TableCell>
-                <TableCell>NPR {Number(c.allocated_amount).toLocaleString()}</TableCell>
-                <TableCell>NPR {Number(c.spent_amount).toLocaleString()}</TableCell>
-                <TableCell>{c.financial_year}</TableCell>
-                <TableCell className="text-right"><Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></TableCell>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card className="border-border/50">
+          <CardContent className="p-4 text-center">
+            <p className="text-xs text-muted-foreground mb-1">Total Budget</p>
+            <p className="text-xl font-bold text-foreground">{fmtNPR(totalAllocated)}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-border/50">
+          <CardContent className="p-4 text-center">
+            <p className="text-xs text-muted-foreground mb-1">Total Spent</p>
+            <p className="text-xl font-bold text-primary">{fmtNPR(totalSpent)}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-border/50">
+          <CardContent className="p-4 text-center">
+            <p className="text-xs text-muted-foreground mb-1">Remaining</p>
+            <p className="text-xl font-bold text-accent">{fmtNPR(totalRemaining)}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-border/50">
+          <CardContent className="p-4 text-center">
+            <p className="text-xs text-muted-foreground mb-1">Utilization</p>
+            <p className="text-xl font-bold">{spentPct}%</p>
+            <div className="w-full bg-muted rounded-full h-2 mt-2">
+              <div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${Math.min(100, Number(spentPct))}%` }} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 mb-4">
+        <Button variant={activeTab === 'categories' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('categories')}>Categories ({categories.length})</Button>
+        <Button variant={activeTab === 'transactions' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('transactions')}>Transactions ({transactions.length})</Button>
+      </div>
+
+      {activeTab === 'categories' && (
+        <Card className="border-border/50 overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Category</TableHead>
+                <TableHead>Allocated</TableHead>
+                <TableHead>Spent</TableHead>
+                <TableHead>Remaining</TableHead>
+                <TableHead>Utilization</TableHead>
+                <TableHead>Year</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+            </TableHeader>
+            <TableBody>
+              {categories.map((c: any) => {
+                const alloc = Number(c.allocated_amount);
+                const spent = Number(c.spent_amount);
+                const rem = alloc - spent;
+                const pct = alloc > 0 ? ((spent / alloc) * 100).toFixed(1) : '0';
+                const isOver = spent > alloc;
+                return (
+                  <TableRow key={c.id}>
+                    <TableCell>
+                      <div>
+                        <span className="font-medium">{c.name}</span>
+                        {c.description && <p className="text-xs text-muted-foreground">{c.description}</p>}
+                      </div>
+                    </TableCell>
+                    <TableCell>{fmtNPR(alloc)}</TableCell>
+                    <TableCell>{fmtNPR(spent)}</TableCell>
+                    <TableCell className={isOver ? 'text-destructive font-medium' : ''}>{fmtNPR(rem)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="w-16 bg-muted rounded-full h-2">
+                          <div className={`h-2 rounded-full ${isOver ? 'bg-destructive' : 'bg-primary'}`} style={{ width: `${Math.min(100, Number(pct))}%` }} />
+                        </div>
+                        <span className="text-xs">{pct}%</span>
+                      </div>
+                    </TableCell>
+                    <TableCell><Badge variant="secondary">{c.financial_year}</Badge></TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" onClick={() => openEditCat(c)}><Pencil className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteCatMutation.mutate(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Card>
+      )}
+
+      {activeTab === 'transactions' && (
+        <Card className="border-border/50 overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.length === 0 && (
+                <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No transactions recorded yet. Click "Record Spending" to add one.</TableCell></TableRow>
+              )}
+              {transactions.map((tx: any) => (
+                <TableRow key={tx.id}>
+                  <TableCell className="text-sm">{tx.transaction_date}</TableCell>
+                  <TableCell className="font-medium">{tx.description}</TableCell>
+                  <TableCell><Badge variant="outline">{(tx.budget_categories as any)?.name || '—'}</Badge></TableCell>
+                  <TableCell className="font-bold text-primary">{fmtNPR(Number(tx.amount))}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={() => deleteTxMutation.mutate(tx)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      )}
     </div>
   );
 };

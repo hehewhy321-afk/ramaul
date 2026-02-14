@@ -47,6 +47,7 @@ const BudgetOverview = () => {
               <CardContent className="p-5 text-center">
                 <p className="text-sm text-muted-foreground mb-1">{t('budget.allocated')}</p>
                 <p className="text-2xl font-bold text-foreground">{formatNPR(totalAllocated)}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{budgetData.length} categories</p>
               </CardContent>
             </Card>
           </StaggerItem>
